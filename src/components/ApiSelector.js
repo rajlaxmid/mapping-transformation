@@ -3,100 +3,49 @@ import React from 'react';
 import axios from 'axios';
 
  //sample JSON file
- var userTreeViewList = {
-  tree: [
-    {
-      "node": {
-        "id": "1",
-        "description": "test1",
-        "children": [
-            {
-             "node": {
-                  "id": "1_1",
-                  "description": "test1_1",
-                  "children": [
-                      {
-                       "node": {
-                            "id": "1_1_1",
-                            "description": "test1_1_1",
-                            "children": [
-                                {
-                                 "node": {
-                                      "id": "1_1_1_1",
-                                      "description": "test1_1_1_1",
-                                      "children": [
-                                      
-                                      ]
-                                  }
-                                }
-                            ]
-                        }
-                      }
-                  ]
-              }
-            },
-            {
-              "node": {
-                "id": "1_2",
-                "description": "test1_2",
-                  "children": []
-              }
-            }
-        ]
-      }
-    },
-    {
-      "node": {
-        "id": "2",
-        "description": "test2",
-        "children": [
-            {
-             "node": {
-                  "id": "2_1",
-                  "description": "test2_1",
-                  "children": [
-                    {
-                     "node": {
-                          "id": "2_1_1",
-                          "description": "test2_1_1",
-                          "children": [
-                          
-                          ]
-                      }
-                    }
-                ]
-              }
-            },
-            {
-              "node": {
-                   "id": "2_2",
-                   "description": "test2_2",
-                   "children": [
-                     {
-                      "node": {
-                           "id": "2_2_1",
-                           "description": "test2_2_1",
-                           "children": [
-                           
-                           ]
-                       }
-                     }
-                 ]
-               }
-             }
-        ]
-      }
-    }
-  ]
+ var obj= {
+	"prodname": "Sony TV",
+	"dimention": {
+		"height": 2,
+		"width": 3,
+		"length": 4
+	},
+	"type": "LED",
+	"size": "42",
+	"price": 43234,
+	"feature": {
+		"wireless": [{
+				"title": "bluetooth",
+				"available": true
+			},
+			{
+				"title": "internet'",
+				"available": true
+			},
+			{
+				"title": "fm radio",
+				"available": false
+			}
+		]
+	}
 };
+
+
+var isSyncingLeftScroll = false;
+      var isSyncingRightScroll = false;
+
 class ApiSelector extends React.Component {
     
     constructor(props){
+        
         super(props);
+        this.state = {dealers: [], apis: [], versions:[],disableVersion:true};
+
         this.selectApiHandler=this.selectApiHandler.bind(this);
         this.checkVersions=this.checkVersions.bind(this);
         this.selectVerFileHandler=this.selectVerFileHandler.bind(this);
-        this.state = {dealers: [], apis: [], versions:[],disableVersion:true};
+        this.printRightEditor = this.printRightEditor.bind(this);
+        this.printLeftEditor = this.printLeftEditor.bind(this);
        
     }
 
@@ -139,22 +88,88 @@ class ApiSelector extends React.Component {
     //select the JSON file based on version selection
     selectVerFileHandler(event){
       console.log("selectVerFileHandler called", event.target.value);
-      debugger;
+      
       var formatted = JSON.stringify(userTreeViewList, null, 2);
                         document.getElementById('originalSource').value = formatted;
+    }
+
+    formatJson(obj){
+      var arr = [];
+      for (var key in obj) {
+          if (typeof obj[key] === "object" && !Array.isArray(obj[key])) {
+              this.formatJson(obj[key]);   
+          } else {
+            if(Array.isArray(obj[key])){
+              arr.push({"key": key, "value": ''}); 
+              this.formatJson(obj[key]);  
+            }else{
+              arr.push({"key": key, "value": obj[key]}); 
+            }
+          }
+      }
+      return arr;
+    }
+
+    printLeftEditor(){
+      var list = this.formatJson(obj);
+      console.log('left:  ',list)
+      return(
+        list.map( (item, i)=>{
+          return <div className="editor-each-row"><span className="badge"> {i}</span> "{item.key}" : "{item.value}"</div>
+        })
+      )
+    }
+
+    printRightEditor(){
+      var list = this.formatJson(obj);
+      console.log('right:  ',list)
+      
+      return(
+        list.map( (item, i)=>{
+          return <div  className="editor-each-row">
+            <span  className="badge">{i}</span>  "<span contentEditable>{item.key}</span>" : "{item.value}"
+          </div>
+        })
+      )
+    }
+  
+
+    leftScroller(){
+      //console.log(111);
+      
+      var leftDiv = document.getElementById('editor-left');
+      var rightDiv = document.getElementById('editor-right');
+
+        if (!isSyncingLeftScroll) {
+          isSyncingRightScroll = true;
+          rightDiv.scrollTop = this.scrollTop;
+        }
+        isSyncingLeftScroll = false;  
+    }
+
+    rightScroller(){
+      //console.log(222);
+      
+      var leftDiv = document.getElementById('editor-left');
+      var rightDiv = document.getElementById('editor-right');
+      if (!isSyncingRightScroll) {
+        isSyncingLeftScroll = true;
+        leftDiv.scrollTop = this.scrollTop;
+      }
+      isSyncingRightScroll = false;
     }
       
    render() {
       return (
-        <div>
+      <div>
       	<div className="api-selector-wrapper">
           <div className="col-md-2">
               Dealer Name:
               <select ref="dealerName" className="form-control"> 
               {
                 this.state.dealers.Dealers !== undefined ?
-                this.state.dealers.Dealers.map( (item)=>{
-                  return <option>{item.DealerName}</option>
+                this.state.dealers.Dealers.map( (item, i)=>{
+                  return <option key={i}>{item.DealerName}</option>
                 }):null
               }
               </select>
@@ -180,17 +195,36 @@ class ApiSelector extends React.Component {
                   <option>Select Version</option>
                   {
                 this.state.versions !== undefined ?
-                this.state.versions.map( (item)=>{
-                  return <option>{item.VerName}</option>
+                this.state.versions.map( (item, i)=>{
+                  return <option key={i}>{item.VerName}</option>
                 }):null
               }
 
               </select>
           </div>
+          <div className="clearfix" />   
+        </div> 
 
-        </div> 
-          <textarea id="originalSource" ></textarea>
-        </div> 
+        <div className="editor-wrapper-main">
+            <div>
+                <div className="editor-header width50per">Original</div>
+                <div className="editor-header  width50per">Target</div>
+            </div>
+            <div>
+                  <div id="editor-left" className="editor editor-left bdr-rt" onScroll={this.leftScroller.bind(this)}>            
+                      
+                    {this.printLeftEditor()}
+                      
+                  </div>
+                  <div id="editor-right" className="editor editor-right"  onScroll={this.rightScroller.bind(this)}>             
+                      
+                        {this.printRightEditor()}
+                      
+                  </div>
+                  <div className="clearfix" />
+            </div>
+        </div>
+      </div> 
         
       );
 
@@ -200,9 +234,27 @@ class ApiSelector extends React.Component {
 export default ApiSelector;
 
 /*
-{
-              this.state.dealers.map( (item)=>{
-                return <option>{item.DealerName}</option>
-              })
-            }
+
+var isSyncingLeftScroll = false;
+var isSyncingRightScroll = false;
+var leftDiv = document.getElementById('left');
+var rightDiv = document.getElementById('right');
+
+leftDiv.onscroll = function() {
+  if (!isSyncingLeftScroll) {
+    isSyncingRightScroll = true;
+    rightDiv.scrollTop = this.scrollTop;
+  }
+  isSyncingLeftScroll = false;
+}
+
+rightDiv.onscroll = function() {
+  if (!isSyncingRightScroll) {
+    isSyncingLeftScroll = true;
+    leftDiv.scrollTop = this.scrollTop;
+  }
+  isSyncingRightScroll = false;
+}
+
+
 */

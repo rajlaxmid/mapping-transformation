@@ -9,4 +9,39 @@
 .logo{
     color: #fff;
     font-size: 1.4em;
+    text-align: center;
+}
+
+.editor-wrapper-main{
+    clear: both;
+    margin-top: 30px;
+    overflow-y: scroll;
+    border: 1px solid #cdcdcd;
+}
+.editor{
+    overflow-y: auto;
+}
+.editor-left, .editor-right{
+    width: 50%;
+    height: 250px;
+    float: left;
+    position: relative;
+    padding: 10px;
+}
+.width50per{
+    width: 50%;
+    float: left;
+}
+.bdr-rt{
+    border-right: 1px solid #ccc;
+}
+.editor-header{
+    background: #999;
+    color: #fff;
+    font-size: 1em;
+    text-align: center;
+    padding: 5px 0;
+}
+.editor-each-row:nth-child(2n){
+    background: #efefef;
 }
