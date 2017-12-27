@@ -44,4 +44,5 @@
 }
 .editor-each-row:nth-child(2n){
     background: #efefef;
+    font-size: 1.5em;
 }
