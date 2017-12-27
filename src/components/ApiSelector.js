@@ -46,9 +46,8 @@ class ApiSelector extends React.Component {
         this.selectVerFileHandler=this.selectVerFileHandler.bind(this);
         this.printRightEditor = this.printRightEditor.bind(this);
         this.printLeftEditor = this.printLeftEditor.bind(this);
-
-        this.finalArr = [];
-       
+        this.keyChangeHandler = this.keyChangeHandler.bind(this);
+        
     }
 
     componentDidMount(){
@@ -170,7 +169,7 @@ class ApiSelector extends React.Component {
       return(
         <div className="editor-each-row">
           <span className="lineNumber"> {i}</span> 
-          <span contentEditable="true">{splittedStr[0]}</span> &nbsp;
+          <span contentEditable="true" onChange={this.keyChangeHandler}>{splittedStr[0]}</span> &nbsp;
           <span>{splittedStr[1]}</span>
         </div>
       )
@@ -197,7 +196,8 @@ class ApiSelector extends React.Component {
 
         if (!isSyncingLeftScroll) {
           isSyncingRightScroll = true;
-          rightDiv.scrollTop = this.scrollTop;
+          rightDiv.scrollTop = leftDiv.scrollTop;
+          rightDiv.sc
         }
         isSyncingLeftScroll = false;  
     }
@@ -209,9 +209,13 @@ class ApiSelector extends React.Component {
       var rightDiv = document.getElementById('editor-right');
       if (!isSyncingRightScroll) {
         isSyncingLeftScroll = true;
-        leftDiv.scrollTop = this.scrollTop;
+        leftDiv.scrollTop = rightDiv.scrollTop;
       }
       isSyncingRightScroll = false;
+    }
+
+    keyChangeHandler(){
+      alert('this.keyChangeHandler');
     }
       
    render() {
