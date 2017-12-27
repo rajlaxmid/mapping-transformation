@@ -1,0 +1,12 @@
+.outer-wrapper{
+    padding: 10px 50px;
+}
+
+.header-wrapper{
+    background: #444;
+}
+
+.logo{
+    color: #fff;
+    font-size: 1.4em;
+}

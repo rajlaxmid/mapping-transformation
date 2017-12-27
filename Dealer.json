@@ -1,0 +1,8 @@
+{
+    "Dealers": [
+        {"DealerName":"Amazon" },
+        {"DealerName":"FlipKart"},
+        {"DealerName":"Ebay"}
+        
+    ]
+}

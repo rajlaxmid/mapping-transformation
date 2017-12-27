@@ -1,0 +1,35 @@
+{
+	"Versions": [{
+            "DealerName":"Amazon",
+			"ApiName": "Api-1",
+			"Version": [{
+				"VerName": "Api1v1",
+				"data": {}
+			}, {
+				"VerName": "Api1v2",
+				"data": {}
+			}]
+		},
+		{
+            "DealerName":"Amazon",
+			"ApiName": "Api-2",
+			"Version": [{
+				"VerName": "Api2v1",
+				"data": {}
+			}, {
+				"VerName": "Api2v2",
+				"data": {}
+			}]
+		},
+
+		{
+			"ApiName": "Api-3",
+			"ApiURL": "http"
+		},
+		{
+			"ApiName": "Api-4",
+			"ApiURL": "http"
+		}
+
+	]
+}
