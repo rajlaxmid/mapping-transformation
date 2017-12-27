@@ -23,7 +23,7 @@
 }
 .editor-left, .editor-right{
     width: 50%;
-    height: 250px;
+    height: 400px;
     float: left;
     position: relative;
     padding: 10px;
@@ -42,7 +42,18 @@
     text-align: center;
     padding: 5px 0;
 }
+.editor-each-row{
+    padding: 3px 0;
+}
 .editor-each-row:nth-child(2n){
     background: #efefef;
-    font-size: 1.5em;
+}
+.lineNumber{
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #777;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 0 0 4px;
 }

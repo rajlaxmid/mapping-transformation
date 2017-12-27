@@ -46,6 +46,8 @@ class ApiSelector extends React.Component {
         this.selectVerFileHandler=this.selectVerFileHandler.bind(this);
         this.printRightEditor = this.printRightEditor.bind(this);
         this.printLeftEditor = this.printLeftEditor.bind(this);
+
+        this.finalArr = [];
        
     }
 
@@ -110,27 +112,80 @@ class ApiSelector extends React.Component {
       return arr;
     }
 
+
+    destructureArray(){
+      var arr =  JSON.stringify(obj);
+      return arr.split('');
+    } 
+
+    formatJson1(){
+      var myArr = this.destructureArray();
+
+      
+      var narr = [];
+      var str = '';
+      
+      myArr.forEach( (item)=> {
+      
+        if(item === "{" || item === "}" || item === "[" || item === "]"  ){ //&&  item!=="," && str===''
+            if(str===''){
+               narr.push(item);
+            }
+            else{
+          narr.push(str, item);
+              str = '';	
+            }
+                
+          }
+          if( item!=="}" && item!=="]" &&  item!=="{" &&  item!=="[" && item!==','){
+             str+=item;
+          }
+          if(  item===',' && str!==''){
+             narr.push(str);
+              str = '';
+          }
+          if(str.substr( str.length-1) === ":" && str.length > 1 && item==='{'){
+          narr.push(str, item);
+              str = '';
+          }
+          
+      });
+
+      return narr;
+    }
+
     printLeftEditor(){
-      var list = this.formatJson(obj);
-      console.log('left:  ',list)
+      
+      var list = this.formatJson1();
+      
       return(
         list.map( (item, i)=>{
-          return <div className="editor-each-row"><span className="badge"> {i}</span> "{item.key}" : "{item.value}"</div>
+          return <div className="editor-each-row"><span className="lineNumber"> {i}</span> {item}</div>
         })
       )
     }
 
+    editableContent(str, i){
+      var splittedStr = str.split(':');
+      return(
+        <div className="editor-each-row">
+          <span className="lineNumber"> {i}</span> 
+          <span contentEditable="true">{splittedStr[0]}</span> &nbsp;
+          <span>{splittedStr[1]}</span>
+        </div>
+      )
+    }
+
     printRightEditor(){
-      var list = this.formatJson(obj);
-      console.log('right:  ',list)
+
+      var list = this.formatJson1();
       
       return(
         list.map( (item, i)=>{
-          return <div  className="editor-each-row">
-            <span  className="badge">{i}</span>  "<span contentEditable>{item.key}</span>" : "{item.value}"
-          </div>
+          return item.length>2 ? this.editableContent(item, i) : <div className="editor-each-row"><span className="lineNumber"> {i}</span> {item}</div>
         })
       )
+      
     }
   
 
